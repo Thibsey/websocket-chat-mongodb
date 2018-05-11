@@ -1,7 +1,8 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const mongo = require('mongodb');
 const bodyparser = require('body-parser');
-const io = require('socket.io').listen(3001, () => { console.log('Port 3001, Fractured but whole...');}).sockets;
+const io = require('socket.io').listen(3000, () => { console.log('Port 3000, Fractured but whole...');}).sockets;
 
 const app = express();
 
@@ -10,10 +11,11 @@ app.use(bodyparser.json());
 app.use(express.static('public'));
 
 // Connect to Database.
-mongoose.connect("mongodb://root:root@ds119070.mlab.com:19070/web-socket-chat", (err, db) => {
+mongo.connect("mongodb://root:root@ds119070.mlab.com:19070/web-socket-chat", (err, db) => {
     if (err) {
-        throw err
+        throw err;
     }
+
     io.on('connection', (socket) => {
         console.log('made socket connection', socket.id);
         let chat = db.collection('chats');
@@ -56,12 +58,3 @@ mongoose.connect("mongodb://root:root@ds119070.mlab.com:19070/web-socket-chat", 
         });
     });
 });
-
-
-
-
-
-// Connect to Server
-app.listen(3000, () => {
-    console.log('Port 3000, Fractured but whole...');
-}); 
